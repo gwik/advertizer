@@ -33,10 +33,9 @@ func TestEventQueueTop(t *testing.T) {
 	}
 }
 
-// TestAvertizer
-func TestAdvertizer(t *testing.T) {
+func TestAdvertizerPushAdvertize(t *testing.T) {
 
-	adv := New(5)
+	adv := New(10)
 
 	adv.Push(0, nil)
 	adv.Push(1, nil)
@@ -67,4 +66,23 @@ func TestAdvertizer(t *testing.T) {
 		}
 	}
 
+	// TODO
+	// - test insert after advertizing a few times
+	// - test drop after max is reached
+
+}
+
+func TestAdvertizeRemove(t *testing.T) {
+	adv := New(10)
+
+	adv.Push(0, 0)
+	adv.Push(1, 1)
+
+	if val, ok := adv.Remove(1); !ok {
+		t.Fatal("should have removed 1")
+	} else {
+		if val != 1 {
+			t.Fatal("val should be returned")
+		}
+	}
 }

@@ -59,7 +59,7 @@ func (eq eventQueue) Top() *event {
 
 // Advertizer is a data structure that allow to advertize events for
 // a number of times before it is dropped. The events are advertized
-// in LIFO order.
+// in FIFO order for each round.
 type Advertizer struct {
 	max int
 	m   map[int64]*event
@@ -85,8 +85,8 @@ func (a *Advertizer) Len() int {
 
 // Push pushes a new event in the advertizing queue.
 func (a *Advertizer) Push(id int64, val interface{}) {
-
 	a.inc++
+
 	if e, ok := a.m[id]; ok {
 		e.val = val
 		e.adv = 0
@@ -125,4 +125,14 @@ func (a *Advertizer) Advertize() (int64, interface{}, bool) {
 	}
 
 	return e.id, e.val, true
+}
+
+// Remove removes the event with id
+func (a *Advertizer) Remove(id int64) (interface{}, bool) {
+	if e, ok := a.m[id]; ok {
+		delete(a.m, id)
+		heap.Remove(a.eq, e.idx)
+		return e.val, true
+	}
+	return nil, false
 }
