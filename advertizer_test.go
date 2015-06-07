@@ -2,6 +2,7 @@ package advertizer
 
 import (
 	"container/heap"
+	"fmt"
 	"testing"
 )
 
@@ -31,6 +32,62 @@ func TestEventQueueTop(t *testing.T) {
 			t.Errorf("e%d should have been popped, was: e%d", v.id, p.id)
 		}
 	}
+}
+
+func ExampleAdvertizer() {
+	adv := New(2)
+
+	adv.Push(0, "zero")
+	adv.Push(1, "one")
+	adv.Push(2, "two")
+	adv.Push(3, "three")
+
+	id, val, _ := adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	adv.Push(1, "one again")
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %s\n", id, val)
+
+	id, val, _ = adv.Advertize()
+	fmt.Printf("%d: %v", id, val)
+
+	// Output: 0: zero
+	// 1: one
+	// 2: two
+	// 3: three
+	// 0: zero
+	// 1: one
+	// 1: one again
+	// 2: two
+	// 3: three
+	// 1: one again
+	// 0: <nil>
 }
 
 func TestAdvertizerPushAdvertize(t *testing.T) {

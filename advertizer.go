@@ -60,6 +60,7 @@ func (eq eventQueue) Top() *event {
 // Advertizer is a data structure that allow to advertize an item for
 // a number of times before it is dropped. The items are advertized
 // in FIFO order for each round.
+// All operations have a O(log(n)) complexity.
 type Advertizer struct {
 	max int
 	m   map[int64]*event
