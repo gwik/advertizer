@@ -57,8 +57,8 @@ func (eq eventQueue) Top() *event {
 	return eq[0]
 }
 
-// Advertizer is a data structure that allow to advertize events for
-// a number of times before it is dropped. The events are advertized
+// Advertizer is a data structure that allow to advertize an item for
+// a number of times before it is dropped. The items are advertized
 // in FIFO order for each round.
 type Advertizer struct {
 	max int
@@ -78,12 +78,13 @@ func New(n int) *Advertizer {
 	return a
 }
 
-// Len returns the number of events in the advertizer
+// Len returns the number of events in the advertizer.
 func (a *Advertizer) Len() int {
 	return len(*a.eq)
 }
 
-// Push pushes a new event in the advertizing queue.
+// Push pushes a new item in the advertizing queue or updates an existing one,
+// resetting its number of advertizing to 0.
 func (a *Advertizer) Push(id int64, val interface{}) {
 	a.inc++
 
@@ -106,10 +107,10 @@ func (a *Advertizer) Push(id int64, val interface{}) {
 	heap.Push(a.eq, e)
 }
 
-// Advertize return the next event to advertize.
-// The event is pushed back if advertize less than the defined
+// Advertize return the next item to advertize.
+// The item is pushed back if advertize less than the defined
 // maximum.
-// It returns nil if there is no event to advertize.
+// It returns nil if there is no item to advertize.
 func (a *Advertizer) Advertize() (int64, interface{}, bool) {
 	e := a.eq.Top()
 	if e == nil {
@@ -127,7 +128,7 @@ func (a *Advertizer) Advertize() (int64, interface{}, bool) {
 	return e.id, e.val, true
 }
 
-// Remove removes the event with id
+// Remove removes an item with id.
 func (a *Advertizer) Remove(id int64) (interface{}, bool) {
 	if e, ok := a.m[id]; ok {
 		delete(a.m, id)
